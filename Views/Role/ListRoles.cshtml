@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityRole>
+@{
+    ViewBag.Title = "All Roles";
+}
+
+<h1> All Roles</h1>
+
+@if (Model.Any())
+{
+    <a class="btn btn-primary mb-3" asp-action="Create" asp-controller="Role"> Add New Role</a>
+    @*foreach (var role in Model)
+            {
+        <div class="card mb-3">
+            <div class="card-header">
+                Role ID: @role.Id
+            </div>
+            <div class="card-body">
+                <h5 class="card-title"> @role.Name</h5>
+            </div>
+            <div class="card-footer">
+                <a href="#" class="btn btn-primary">Edit</a>
+                <a href="#" class="btn btn-primary">Delete</a>
+            </div>
+        </div>
+            }*@
+
+    @(Html
+    .Grid(Model)
+    .Build(columns =>
+    {
+        columns.Add(model => Html.CheckBox("Person_" + model.Id)); // IHtmlContent has encoding disabled by default.
+
+        columns.Add(model => model.Name).Titled("Name");
+        columns.Add(model => $"<a href=\"Details\\{model.Id}\">Edit</a>").Encoded(false);
+        columns.Add(model => $"<a href=\"#\">Delete</a>").Encoded(false);
+
+    }).Pageable(pager =>
+    {
+        pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 10, "10" }, { 25, "25" } };
+        pager.ShowPageSizes = true;
+        pager.PagesToDisplay = 3;
+        pager.CurrentPage = 1;
+        pager.RowsPerPage = 10;
+    })
+)
+}
+
